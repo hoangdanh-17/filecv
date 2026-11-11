@@ -1,10 +1,10 @@
-
+// auth_gate.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'login_screen.dart';
 import 'verify_email_screen.dart';
-import 'profile_screen.dart';
+import 'main_navigation_screen.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -16,34 +16,28 @@ class AuthGate extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
 
         if (snapshot.hasError) {
           return const Scaffold(
-            body: Center(
-              child: Text('Không thể kiểm tra trạng thái đăng nhập.'),
-            ),
+            body: Center(child: Text('Không thể kiểm tra trạng thái đăng nhập.')),
           );
         }
 
         final user = snapshot.data;
 
-        // Chưa đăng nhập
         if (user == null) {
           return const LoginScreen();
         }
 
-        // Đã đăng nhập nhưng chưa xác minh email
         if (!user.emailVerified) {
           return const VerifyEmailScreen();
         }
 
-        // Đã đăng nhập và xác minh email
-        return const ProfileScreen();
+        // Đã xác minh -> Mở thanh điều hướng chính
+        return const MainNavigationScreen();
       },
     );
   }
